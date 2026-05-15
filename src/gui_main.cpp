@@ -21,16 +21,12 @@
 #include "BudgetManager.h"
 #include "Category.h"
 #include "FinanceAssistant.h"
-<<<<<<< HEAD
 #include "Database.h"
-=======
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
 
 // ─── User account ─────────────────────────────────────────────────────────────
 struct UserRecord {
     std::string username;
     std::string displayName;
-<<<<<<< HEAD
     std::string password;  // unused once SQLite owns auth; kept for legacy display
 };
 static std::vector<UserRecord> g_users;
@@ -39,12 +35,6 @@ static int g_currentUserId = -1;   // SQLite user id, -1 = not logged in
 
 // ─── SQLite database (owned by main(), pointer used everywhere else) ─────────
 static Database* g_db = nullptr;
-=======
-    std::string password;
-};
-static std::vector<UserRecord> g_users;
-static int g_currentUser = -1;   // index into g_users, -1 = not logged in
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
 
 // ─── App / screen state ───────────────────────────────────────────────────────
 enum class AppState { Login, Register, Main };
@@ -70,17 +60,10 @@ static std::string dataRoot() {
     const char* h = getenv("HOME");
     return (h ? std::string(h) : std::string(".")) + "/.budgetsystem";
 }
-<<<<<<< HEAD
 [[maybe_unused]] static std::string userDir(const std::string& uname) {
     return dataRoot() + "/" + uname;
 }
 [[maybe_unused]] static void saveUsers() {
-=======
-static std::string userDir(const std::string& uname) {
-    return dataRoot() + "/" + uname;
-}
-static void saveUsers() {
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
     std::string root = dataRoot();
     mkdir(root.c_str(), 0755);
     std::ofstream f(root + "/users.csv");
@@ -88,13 +71,10 @@ static void saveUsers() {
         f << u.username << "\t" << u.displayName << "\t" << u.password << "\n";
 }
 static void loadUsers() {
-<<<<<<< HEAD
     // Legacy: hydrate g_users from users.csv (kept so previously-registered users
     // on this machine still appear). The SQLite database is now the source of
     // truth — every registration mirrors into SQLite, and login is validated
     // against SQLite, not against the password column read here.
-=======
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
     std::ifstream f(dataRoot() + "/users.csv");
     std::string line;
     while (std::getline(f, line)) {
@@ -107,7 +87,6 @@ static void loadUsers() {
     }
 }
 
-<<<<<<< HEAD
 // ─── SQLite ↔ BudgetManager bridge ───────────────────────────────────────────
 // Pulls every row owned by userId out of SQLite and rebuilds the in-memory
 // BudgetManager state. Called once on login (before the dashboard appears).
@@ -169,8 +148,6 @@ static void dumpManagerToDb(int userId, const BudgetManager& mgr) {
     for (const auto& b : mgr.getBillsAll())    g_db->insertBill   (userId, b);
 }
 
-=======
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
 static ImVec4 pctColor(double pct) {
     if (pct >= 100.0) return kRed;
     if (pct >= 80.0)  return kYellow;
@@ -748,10 +725,7 @@ static void RenderExpenses(BudgetManager& mgr) {
             if (amount > 0.0f && catIdx < (int)cats.size()) {
                 Date d(year, month, day);
                 mgr.addExpense(d, (double)amount, cats[catIdx], descBuf, methods[methIdx]);
-<<<<<<< HEAD
                 flushToDb(mgr);
-=======
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
                 amount = 0.0f;
                 descBuf[0] = '\0';
             }
@@ -768,17 +742,10 @@ static void RenderExpenses(BudgetManager& mgr) {
     ImGui::PushStyleColor(ImGuiCol_Button,        kRed);
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {0.95f,0.20f,0.20f,1.0f});
     ImGui::PushStyleColor(ImGuiCol_Text,          kWhite);
-<<<<<<< HEAD
     if (ImGui::Button("Delete##e") && deleteId > 0) { mgr.deleteExpense(deleteId); flushToDb(mgr); deleteId = 0; }
     ImGui::PopStyleColor(3);
     ImGui::SameLine(0, 8);
     if (ImGui::Button("Undo##e")) { mgr.undoLastAction(); flushToDb(mgr); }
-=======
-    if (ImGui::Button("Delete##e") && deleteId > 0) { mgr.deleteExpense(deleteId); deleteId = 0; }
-    ImGui::PopStyleColor(3);
-    ImGui::SameLine(0, 8);
-    if (ImGui::Button("Undo##e")) mgr.undoLastAction();
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
     ImGui::Separator();
 
     if (ImGui::BeginTable("##exp_tbl", 6,
@@ -866,10 +833,7 @@ static void RenderIncomes(BudgetManager& mgr) {
                 Date d(year, month, day);
                 std::string src(srcBuf); if (src.empty()) src = "Other";
                 mgr.addIncome(d, (double)amount, "Other", descBuf, src);
-<<<<<<< HEAD
                 flushToDb(mgr);
-=======
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
                 amount = 0.0f;
                 descBuf[0] = '\0';
                 srcBuf[0] = '\0';
@@ -887,17 +851,10 @@ static void RenderIncomes(BudgetManager& mgr) {
     ImGui::PushStyleColor(ImGuiCol_Button,        kRed);
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {0.95f,0.20f,0.20f,1.0f});
     ImGui::PushStyleColor(ImGuiCol_Text,          kWhite);
-<<<<<<< HEAD
     if (ImGui::Button("Delete##i") && deleteId > 0) { mgr.deleteIncome(deleteId); flushToDb(mgr); deleteId = 0; }
     ImGui::PopStyleColor(3);
     ImGui::SameLine(0, 8);
     if (ImGui::Button("Undo##i")) { mgr.undoLastAction(); flushToDb(mgr); }
-=======
-    if (ImGui::Button("Delete##i") && deleteId > 0) { mgr.deleteIncome(deleteId); deleteId = 0; }
-    ImGui::PopStyleColor(3);
-    ImGui::SameLine(0, 8);
-    if (ImGui::Button("Undo##i")) mgr.undoLastAction();
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
     ImGui::Separator();
 
     if (ImGui::BeginTable("##inc_tbl", 5,
@@ -962,10 +919,7 @@ static void RenderBills(BudgetManager& mgr) {
             if (amount > 0.0f && nameBuf[0] != '\0') {
                 Date d(year, month, day);
                 mgr.addBill(nameBuf, (double)amount, d);
-<<<<<<< HEAD
                 flushToDb(mgr);
-=======
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
                 amount = 0.0f;
                 nameBuf[0] = '\0';
             }
@@ -982,17 +936,10 @@ static void RenderBills(BudgetManager& mgr) {
     ImGui::PushStyleColor(ImGuiCol_Button,        kRed);
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {0.95f,0.20f,0.20f,1.0f});
     ImGui::PushStyleColor(ImGuiCol_Text,          kWhite);
-<<<<<<< HEAD
     if (ImGui::Button("Delete##b") && deleteId > 0) { mgr.deleteBill(deleteId); flushToDb(mgr); deleteId = 0; }
     ImGui::PopStyleColor(3);
     ImGui::SameLine(0, 8);
     if (ImGui::Button("Undo##b")) { mgr.undoLastAction(); flushToDb(mgr); }
-=======
-    if (ImGui::Button("Delete##b") && deleteId > 0) { mgr.deleteBill(deleteId); deleteId = 0; }
-    ImGui::PopStyleColor(3);
-    ImGui::SameLine(0, 8);
-    if (ImGui::Button("Undo##b")) mgr.undoLastAction();
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
     ImGui::Separator();
 
     if (ImGui::BeginTable("##bill_tbl", 7,
@@ -1036,10 +983,7 @@ static void RenderBills(BudgetManager& mgr) {
                 ImGui::PushStyleColor(ImGuiCol_Text, kWhite);
                 if (ImGui::SmallButton(payLabel)) {
                     mgr.markBillPaid(billId);
-<<<<<<< HEAD
                     flushToDb(mgr);
-=======
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
                 }
                 ImGui::PopStyleColor(2);
             }
@@ -1051,10 +995,7 @@ static void RenderBills(BudgetManager& mgr) {
             ImGui::PushStyleColor(ImGuiCol_Text, kWhite);
             if (ImGui::SmallButton(delLabel)) {
                 mgr.deleteBill(billId);
-<<<<<<< HEAD
                 flushToDb(mgr);
-=======
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
             }
             ImGui::PopStyleColor(2);
         }
@@ -1080,15 +1021,10 @@ static void RenderBudget(BudgetManager& mgr) {
     ImGui::SameLine(0, 12);
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() +
                          ImGui::GetTextLineHeight() + ImGui::GetStyle().ItemSpacing.y);
-<<<<<<< HEAD
     if (ImGui::Button("Set Budget", {110, 0}) && catIdx < (int)cats.size() && budget >= 0.0f) {
         mgr.setCategoryBudget(cats[catIdx], (double)budget);
         flushToDb(mgr);
     }
-=======
-    if (ImGui::Button("Set Budget", {110, 0}) && catIdx < (int)cats.size() && budget >= 0.0f)
-        mgr.setCategoryBudget(cats[catIdx], (double)budget);
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
     ImGui::Separator();
 
     if (ImGui::BeginTable("##bud_tbl", 5,
@@ -1289,18 +1225,11 @@ static void RenderUserInfo(BudgetManager& mgr) {
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {0.95f,0.20f,0.20f,1.0f});
     ImGui::PushStyleColor(ImGuiCol_Text,           kWhite);
     if (ImGui::Button("Log Out", {130.0f, 36.0f})) {
-<<<<<<< HEAD
         dumpManagerToDb(g_currentUserId, mgr);
         mgr.clear();
         g_currentUser   = -1;
         g_currentUserId = -1;
         g_appState      = AppState::Login;
-=======
-        mgr.saveToDir(userDir(u.username));
-        mgr.clear();
-        g_currentUser = -1;
-        g_appState    = AppState::Login;
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
         g_screen      = Screen::Assistant;
         g_chat.clear();
         g_chat.push_back("  Hi, I am Smile. Your personal finance assistant.");
@@ -1550,7 +1479,6 @@ static void RenderLogin(BudgetManager& mgr) {
 
     if (doLogin) {
         errMsg.clear();
-<<<<<<< HEAD
         int uid = (g_db ? g_db->loginUser(userBuf, passBuf) : -1);
         if (uid > 0) {
             g_currentUserId = uid;
@@ -1570,19 +1498,6 @@ static void RenderLogin(BudgetManager& mgr) {
         } else {
             errMsg = "Incorrect username or password.";
         }
-=======
-        bool ok = false;
-        for (int i = 0; i < (int)g_users.size(); ++i) {
-            if (g_users[i].username == userBuf && g_users[i].password == passBuf) {
-                g_currentUser = i;
-                g_appState    = AppState::Main;
-                userBuf[0] = passBuf[0] = '\0';
-                ok = true; break;
-            }
-        }
-        if (ok) mgr.loadFromDir(userDir(g_users[g_currentUser].username));
-        else    errMsg = "Incorrect username or password.";
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
     }
 
     // Switch to Register
@@ -1670,7 +1585,6 @@ static void RenderRegister(BudgetManager& mgr) { (void)mgr;
         if (userBuf[0] == '\0')               errMsg = "Username cannot be empty.";
         else if (passBuf[0] == '\0')           errMsg = "Password cannot be empty.";
         else if (std::string(passBuf) != confBuf) errMsg = "Passwords do not match.";
-<<<<<<< HEAD
         else if (!g_db)                       errMsg = "Database is not initialised.";
         else {
             int uid = g_db->registerUser(userBuf, passBuf);
@@ -1682,19 +1596,6 @@ static void RenderRegister(BudgetManager& mgr) { (void)mgr;
                 g_currentUser   = (int)g_users.size() - 1;
                 g_currentUserId = uid;
                 g_appState      = AppState::Main;
-=======
-        else {
-            for (auto& u : g_users)
-                if (u.username == userBuf) { errMsg = "Username already taken."; break; }
-            if (errMsg.empty()) {
-                std::string dname = (nameBuf[0] != '\0') ? nameBuf : userBuf;
-                g_users.push_back({userBuf, dname, passBuf});
-                g_currentUser = (int)g_users.size() - 1;
-                g_appState    = AppState::Main;
-                saveUsers();
-                std::string ud = userDir(userBuf);
-                mkdir(ud.c_str(), 0755);
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
                 userBuf[0] = nameBuf[0] = passBuf[0] = confBuf[0] = '\0';
             }
         }
@@ -1768,14 +1669,11 @@ int main() {
     BudgetManager    mgr;
     FinanceAssistant fa(mgr);
 
-<<<<<<< HEAD
     // SQLite database — created/opened in the working directory. Schema is
     // initialised on construction; subsequent runs reuse the existing file.
     Database db("budget.db");
     g_db = &db;
 
-=======
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
     loadUsers();
     g_chat.push_back("  Hi, I am Smile. Your personal finance assistant.");
     g_chat.push_back("  I can help you track your spending, check how your budget is holding up,");
@@ -1803,12 +1701,7 @@ int main() {
     }
 
     // Save current user's data when the window is closed
-<<<<<<< HEAD
     if (g_currentUserId > 0) dumpManagerToDb(g_currentUserId, mgr);
-=======
-    if (g_currentUser >= 0 && g_currentUser < (int)g_users.size())
-        mgr.saveToDir(userDir(g_users[g_currentUser].username));
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

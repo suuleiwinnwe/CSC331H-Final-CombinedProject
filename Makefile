@@ -3,7 +3,6 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -O2 -Iinclude -Iimgui -Iimgui/backends
 
 GLFW_CFLAGS := $(shell pkg-config --cflags glfw3)
 GLFW_LIBS   := $(shell pkg-config --libs   glfw3)
-<<<<<<< HEAD
 SQLITE_LIBS := $(shell pkg-config --libs sqlite3 2>/dev/null || echo "-lsqlite3")
 GUI_LDFLAGS  = $(GLFW_LIBS) $(SQLITE_LIBS) -framework OpenGL
 
@@ -11,14 +10,6 @@ GUI_LDFLAGS  = $(GLFW_LIBS) $(SQLITE_LIBS) -framework OpenGL
 COMMON_OBJ = build/BudgetManager.o build/Bill.o build/Category.o build/Date.o \
              build/Database.o build/Expense.o build/FinanceAssistant.o        \
              build/Income.o build/ReminderSystem.o build/Transaction.o
-=======
-GUI_LDFLAGS  = $(GLFW_LIBS) -framework OpenGL
-
-# ── Source groups ──────────────────────────────────────────────────────────────
-COMMON_OBJ = build/BudgetManager.o build/Bill.o build/Category.o build/Date.o \
-             build/Expense.o build/FinanceAssistant.o build/Income.o           \
-             build/ReminderSystem.o build/Transaction.o
->>>>>>> d4587b50dd85702049a91f84ab3b8c6ac07f8003
 
 IMGUI_OBJ  = build/imgui/imgui.o            \
              build/imgui/imgui_draw.o        \
