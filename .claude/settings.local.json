@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import docx\")",
+      "Bash(pip3 install *)",
+      "Bash(python3 /tmp/build_report.py)",
+      "Bash(make)",
+      "Bash(echo \"---exit code: $?---\")",
+      "Bash(rm -f budget.db)",
+      "Bash(timeout 2 ./budget_gui)",
+      "Bash(echo \"exit: $?\")",
+      "Read(//tmp/**)",
+      "Bash(sqlite3 budget.db \".schema\")"
+    ]
+  }
+}
